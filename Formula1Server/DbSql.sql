@@ -10,6 +10,19 @@ Go
 Use Dbsql
 Go
 
+-- Create a login for the admin user
+CREATE LOGIN [AdminLogin] WITH PASSWORD = 'rokazyo123';
+Go
+
+-- Create a user in the DbSql database for the login
+CREATE USER [AdminLogin] FOR LOGIN [AdminLogin];
+Go
+
+-- Add the user to the db_owner role to grant admin privileges
+ALTER ROLE db_owner ADD MEMBER [AdminLogin];
+Go
+
+
 -- creation of the user types table --
 CREATE TABLE UserTypes (
 	[UserTypeId] INT IDENTITY(1,1) PRIMARY KEY, -- PK
@@ -65,7 +78,6 @@ CREATE TABLE ArticlesSubjects (
 	--CONSTRAINT PK_ArticlesSubjects
 	PRIMARY KEY(ArticleId,SubjectId) -- constraints both the article id and the subject id to the PK
 )
-
 
 
 INSERT INTO UserTypes VALUES('Driver')
