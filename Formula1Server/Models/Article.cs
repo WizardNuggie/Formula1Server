@@ -21,9 +21,9 @@ public partial class Article
 
     [ForeignKey("ArticleId")]
     [InverseProperty("Articles")]
-    public virtual ICollection<Subject> Subjects { get; set; } = new List<Subject>();
+    public virtual ICollection<Subject> Subjects { get; set; } = [];
 
     [ForeignKey("ArticleId")]
     [InverseProperty("Articles")]
-    public virtual ICollection<User> Writers { get; set; } = new List<User>();
+    public virtual ICollection<User> Writers { get; set; } = [];
 }

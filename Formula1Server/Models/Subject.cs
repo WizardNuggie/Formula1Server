@@ -16,5 +16,5 @@ public partial class Subject
 
     [ForeignKey("SubjectId")]
     [InverseProperty("Subjects")]
-    public virtual ICollection<Article> Articles { get; set; } = new List<Article>();
+    public virtual ICollection<Article> Articles { get; set; } = [];
 }
