@@ -12,34 +12,34 @@ public partial class User
     public int UserId { get; set; }
 
     [StringLength(250)]
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
     [StringLength(20)]
-    public string? Username { get; set; }
+    public string Username { get; set; }
 
     [StringLength(250)]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [StringLength(20)]
-    public string? Password { get; set; }
+    public string Password { get; set; }
 
-    public bool? IsAdmin { get; set; }
-
-    [StringLength(250)]
-    public string? FavDriver { get; set; }
+    public bool IsAdmin { get; set; }
 
     [StringLength(250)]
-    public string? FavConstructor { get; set; }
+    public string FavDriver { get; set; }
 
-    public DateOnly? Birthday { get; set; }
+    [StringLength(250)]
+    public string FavConstructor { get; set; }
 
-    public bool? IsRecievingNot { get; set; }
+    public DateOnly Birthday { get; set; }
 
-    public int? UserTypeId { get; set; }
+    public bool IsRecievingNot { get; set; }
+
+    public int UserTypeId { get; set; }
 
     [ForeignKey("UserTypeId")]
     [InverseProperty("Users")]
-    public virtual UserType? UserType { get; set; }
+    public virtual UserType UserType { get; set; }
 
     [ForeignKey("WriterId")]
     [InverseProperty("Writers")]

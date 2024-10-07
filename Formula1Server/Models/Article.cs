@@ -12,12 +12,12 @@ public partial class Article
     public int ArticleId { get; set; }
 
     [StringLength(250)]
-    public string? Title { get; set; }
+    public string Title { get; set; }
 
     [StringLength(4000)]
-    public string? Text { get; set; }
+    public string Text { get; set; }
 
-    public bool? IsBreaking { get; set; }
+    public bool IsBreaking { get; set; }
 
     [ForeignKey("ArticleId")]
     [InverseProperty("Articles")]

@@ -12,7 +12,7 @@ public partial class Subject
     public int SubjectId { get; set; }
 
     [StringLength(250)]
-    public string? SubjectName { get; set; }
+    public string SubjectName { get; set; }
 
     [ForeignKey("SubjectId")]
     [InverseProperty("Subjects")]
