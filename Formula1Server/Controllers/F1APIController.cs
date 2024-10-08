@@ -18,5 +18,40 @@ namespace Formula1Server.Controllers
             this.context = context;
             this.webHostEnvironment = env;
         }
+
+        #region Register
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] DTO.UserDTO userDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.User modelsUser = new()
+                {
+                    Email = userDto.Email,
+                    Username = userDto.Username,
+                    Name = userDto.Name,
+                    Password = userDto.Password,
+                    FavDriver = userDto.FavDriver,
+                    FavConstructor = userDto.FavConstructor,
+                    Birthday = userDto.Birthday,
+                };
+
+                context.Users.Add(modelsUser);
+                context.SaveChanges();
+
+                //User was added!
+                DTO.UserDTO dtoUser = new(modelsUser);
+                return Ok(dtoUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        #endregion
     }
 }

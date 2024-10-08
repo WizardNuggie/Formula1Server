@@ -23,8 +23,6 @@ public partial class User
     [StringLength(20)]
     public string Password { get; set; }
 
-    public bool IsAdmin { get; set; }
-
     [StringLength(250)]
     public string FavDriver { get; set; }
 
@@ -32,6 +30,8 @@ public partial class User
     public string FavConstructor { get; set; }
 
     public DateOnly Birthday { get; set; }
+
+    public bool IsAdmin { get; set; }
 
     public bool IsRecievingNot { get; set; }
 

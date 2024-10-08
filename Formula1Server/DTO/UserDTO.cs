@@ -20,6 +20,16 @@
             this.FavConstructor = @const;
             this.Birthday = bd;
         }
+        public UserDTO(Models.User u)
+        {
+            this.Email = u.Email;
+            this.Username = u.Username;
+            this.Name = u.Name;
+            this.Password = u.Password;
+            this.FavDriver = u.FavDriver;
+            this.FavConstructor = u.FavConstructor;
+            this.Birthday = u.Birthday;
+        }
         public UserDTO() { }
     }
 }
