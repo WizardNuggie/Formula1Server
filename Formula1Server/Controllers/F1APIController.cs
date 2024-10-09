@@ -20,7 +20,7 @@ namespace Formula1Server.Controllers
         }
 
         #region Register
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public IActionResult Register([FromBody] DTO.UserDTO userDto)
         {
             try
