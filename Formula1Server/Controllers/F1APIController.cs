@@ -4,7 +4,7 @@ using Formula1Server.Models;
 
 namespace Formula1Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class F1APIController : ControllerBase
     {
@@ -18,6 +18,36 @@ namespace Formula1Server.Controllers
             this.context = context;
             this.webHostEnvironment = env;
         }
+        #region Login
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] DTO.LoginDTO loginDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.User? modelsUser = context.GetUser(loginDto.Username);
+
+                //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
+                if (modelsUser == null || modelsUser.Password != loginDto.Password)
+                {
+                    return Unauthorized();
+                }
+
+                //Login suceed! now mark login in session memory!
+                HttpContext.Session.SetString("loggedInUser", modelsUser.Username);
+
+                DTO.UserDTO dtoUser = new DTO.UserDTO(modelsUser);
+                return Ok(dtoUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        #endregion
 
         #region Register
         [HttpPost("Register")]
@@ -37,8 +67,9 @@ namespace Formula1Server.Controllers
                     FavDriver = userDto.FavDriver,
                     FavConstructor = userDto.FavConstructor,
                     Birthday = userDto.Birthday,
+                    UserTypeId = 4,
                 };
-
+                modelsUser.UserType = this.context.UserTypes.Where(t => t.UserTypeId == modelsUser.UserTypeId).FirstOrDefault();
                 context.Users.Add(modelsUser);
                 context.SaveChanges();
 
