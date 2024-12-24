@@ -96,6 +96,8 @@ Go
 INSERT INTO Users VALUES('yo@gmail.com','yoyo','yo','1234',0,'Fernando Alonso','Aston Martin','2007/06/10',1,4)
 Go
 
+SELECT * FROM UserTypes
+Go
 SELECT * FROM Users
 Go
 
