@@ -84,5 +84,47 @@ namespace Formula1Server.Controllers
 
         }
         #endregion
+
+        #region GetNews
+        [HttpGet("GetNews")]
+        public IActionResult GetNews()
+        {
+            try
+            {
+                List<DTO.ArticleDTO> dtoNews = new();
+                List<Article> modelNews = context.Articles.ToList();
+                foreach (Article a in modelNews)
+                {
+                    dtoNews.Add(new DTO.ArticleDTO(a));
+                }
+                return Ok(dtoNews);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region GetSubjects
+        [HttpGet("GetSubjects")]
+        public IActionResult GetSubjects()
+        {
+            try
+            {
+                List<DTO.SubjectDTO> dtoSubjects = new();
+                List<Subject> modelSubjects = context.Subjects.ToList();
+                foreach (Subject s in modelSubjects)
+                {
+                    dtoSubjects.Add(new DTO.SubjectDTO() { Name = s.SubjectName});
+                }
+                return Ok(dtoSubjects);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
     }
 }

@@ -15,5 +15,11 @@ namespace Formula1Server.DTO
             this.IsBreaking = isBreaking;
         }
         public ArticleDTO() { }
+        public ArticleDTO(Models.Article a)
+        {
+            this.Title = a.Title;
+            this.Text = a.Text;
+            this.IsBreaking = a.IsBreaking;
+        }
     }
 }

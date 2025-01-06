@@ -85,20 +85,61 @@ CREATE TABLE ArticlesSubjects (
 Go
 
 
-INSERT INTO UserTypes VALUES('Driver')
-Go
-INSERT INTO UserTypes VALUES('Constructor')
-Go
 INSERT INTO UserTypes VALUES('Writer')
 Go
 INSERT INTO UserTypes VALUES('Regular')
 Go
-INSERT INTO Users VALUES('yo@gmail.com','yoyo','yo','1234',0,'Fernando Alonso','Aston Martin','2007/06/10',1,4)
+
+INSERT INTO Users VALUES('yo@gmail.com','yoyo','Ro','1234',0,'Fernando Alonso','Aston Martin','2007/06/10',1, 2)
+Go
+INSERT INTO Users VALUES('writer@gmail.com', 'writer1', 'Shahar Dabush', 'writer123', 0, 'Fernando Alonso','Aston Martin','2007/09/29', 1, 1)
+Go
+INSERT INTO Users VALUES('admin@gmail.com', 'admin1', 'Ofek Rom', 'writer123', 1, 'Fernando Alonso','Aston Martin','2007/03/12', 0, 2)
+Go
+
+INSERT INTO Articles VALUES('Test', 'This is the test article', 1)
+Go
+INSERT INTO Articles VALUES('Test', 'This is the second test article', 0)
+Go
+
+INSERT INTO Subjects VALUES('General')
+Go
+INSERT INTO Subjects VALUES('Drivers')
+Go
+INSERT INTO Subjects VALUES('Constructors')
+Go
+INSERT INTO Subjects VALUES('Races')
+Go
+INSERT INTO Subjects VALUES('Technical')
+Go
+INSERT INTO Subjects VALUES('F2')
+Go
+
+INSERT INTO ArticlesSubjects VALUES(1, 2)
+Go
+INSERT INTO ArticlesSubjects VALUES(1, 4)
+Go
+INSERT INTO ArticlesSubjects VALUES(1, 6)
+Go
+INSERT INTO ArticlesSubjects VALUES(2, 3)
+Go
+
+INSERT INTO WritersArticles VALUES(1, 2)
+Go
+INSERT INTO WritersArticles VALUES(2, 2)
 Go
 
 SELECT * FROM UserTypes
 Go
 SELECT * FROM Users
+Go
+SELECT * FROM Articles
+Go
+SELECT * FROM Subjects
+Go
+SELECT * FROM ArticlesSubjects
+Go
+SELECT * FROM WritersArticles
 Go
 
 --scaffold - DbContext \"Server = (localdb)\MSSQLLocalDB;Initial Catalog=DbSql;User ID=AdminLogin;Password=rokazyo123;\" Microsoft.EntityFrameworkCore.SqlServer - OutPutDir Models - Context F1DBContext - DataAnnotations - force
