@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Formula1Server.Models;
+using Formula1Server.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Formula1Server.Controllers
 {
@@ -104,6 +106,27 @@ namespace Formula1Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("GetNewsBySubject")]
+        public IActionResult GetNewsBySubjects(int subjectId)
+        {
+            try
+            {
+                List<Subject> subjects = context.Subjects.Include(s => s.Articles).ToList();
+                Subject subject = subjects.Where(x =>  x.SubjectId == subjectId).FirstOrDefault();
+                List<DTO.ArticleDTO> dtoNews = new();
+                List<Article> modelNews = subject.Articles.ToList();
+                foreach (Article a in modelNews)
+                {
+                    dtoNews.Add(new DTO.ArticleDTO(a));
+                }
+                return Ok(dtoNews);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
         #region GetSubjects
@@ -116,7 +139,7 @@ namespace Formula1Server.Controllers
                 List<Subject> modelSubjects = context.Subjects.ToList();
                 foreach (Subject s in modelSubjects)
                 {
-                    dtoSubjects.Add(new DTO.SubjectDTO() { Name = s.SubjectName});
+                    dtoSubjects.Add(new DTO.SubjectDTO(s));
                 }
                 return Ok(dtoSubjects);
             }
