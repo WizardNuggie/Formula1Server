@@ -90,7 +90,7 @@ Go
 INSERT INTO UserTypes VALUES('Regular')
 Go
 
-INSERT INTO Users VALUES('yo@gmail.com','yoyo','Ro','1234',0,'Fernando Alonso','Aston Martin','2007/06/10',1, 2)
+INSERT INTO Users VALUES('regular@gmail.com','regular1','Ro','regular123',0,'Fernando Alonso','Aston Martin','2007/06/10',1, 2)
 Go
 INSERT INTO Users VALUES('writer@gmail.com', 'writer1', 'Shahar Dabush', 'writer123', 0, 'Fernando Alonso','Aston Martin','2007/09/29', 1, 1)
 Go
