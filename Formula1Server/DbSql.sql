@@ -102,26 +102,27 @@ Go
 INSERT INTO Articles VALUES('Test', 'This is the second test article', 0)
 Go
 
-INSERT INTO Subjects VALUES('General')
-Go
+
 INSERT INTO Subjects VALUES('Drivers')
 Go
 INSERT INTO Subjects VALUES('Constructors')
 Go
 INSERT INTO Subjects VALUES('Races')
 Go
-INSERT INTO Subjects VALUES('Technical')
-Go
 INSERT INTO Subjects VALUES('F2')
 Go
+INSERT INTO Subjects VALUES('Technical')
+Go
+INSERT INTO Subjects VALUES('General')
+Go
 
-INSERT INTO ArticlesSubjects VALUES(1, 2)
+INSERT INTO ArticlesSubjects VALUES(1, 1)
+Go
+INSERT INTO ArticlesSubjects VALUES(1, 3)
 Go
 INSERT INTO ArticlesSubjects VALUES(1, 4)
 Go
-INSERT INTO ArticlesSubjects VALUES(1, 6)
-Go
-INSERT INTO ArticlesSubjects VALUES(2, 3)
+INSERT INTO ArticlesSubjects VALUES(2, 2)
 Go
 
 INSERT INTO WritersArticles VALUES(1, 2)

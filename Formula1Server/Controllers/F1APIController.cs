@@ -94,7 +94,7 @@ namespace Formula1Server.Controllers
             try
             {
                 List<DTO.ArticleDTO> dtoNews = new();
-                List<Article> modelNews = context.Articles.ToList();
+                List<Article> modelNews = context.Articles.Include(a => a.Subjects).ToList();
                 foreach (Article a in modelNews)
                 {
                     dtoNews.Add(new DTO.ArticleDTO(a));
