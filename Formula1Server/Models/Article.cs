@@ -12,18 +12,20 @@ public partial class Article
     public int ArticleId { get; set; }
 
     [StringLength(250)]
-    public string Title { get; set; }
+    public string Title { get; set; } = null!;
 
     [StringLength(4000)]
-    public string Text { get; set; }
+    public string Text { get; set; } = null!;
 
     public bool IsBreaking { get; set; }
 
-    [ForeignKey("ArticleId")]
+    public int WriterId { get; set; }
+
+    [ForeignKey("WriterId")]
     [InverseProperty("Articles")]
-    public virtual ICollection<Subject> Subjects { get; set; } = [];
+    public virtual User Writer { get; set; } = null!;
 
     [ForeignKey("ArticleId")]
     [InverseProperty("Articles")]
-    public virtual ICollection<User> Writers { get; set; } = [];
+    public virtual ICollection<Subject> Subjects { get; set; } = new List<Subject>();
 }

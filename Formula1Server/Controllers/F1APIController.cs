@@ -72,6 +72,10 @@ namespace Formula1Server.Controllers
                     UserTypeId = 4,
                 };
                 modelsUser.UserType = this.context.UserTypes.Where(t => t.UserTypeId == modelsUser.UserTypeId).FirstOrDefault();
+                if (this.context.Users.Where(u => u.Username == modelsUser.Username).Any())
+                {
+                    return Conflict("Username already exists");
+                }
                 context.Users.Add(modelsUser);
                 context.SaveChanges();
 
@@ -148,6 +152,218 @@ namespace Formula1Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
+
+        #region GetUsers
+
+        [HttpGet("GetUsers")]
+        public IActionResult GetUsers()
+        {
+            try
+            {
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                List<DTO.UserDTO> dtoUsers = new();
+                List<User> modelUsers = context.Users.ToList();
+                foreach (User u in modelUsers)
+                {
+                    dtoUsers.Add(new DTO.UserDTO(u));
+                }
+                return Ok(dtoUsers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region GetUserTypes
+
+        [HttpGet("GetUserTypes")]
+        public IActionResult GetUserTypes()
+        {
+            try
+            {
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                List<DTO.UserTypeDTO> dtoUserTypes = new();
+                List<UserType> modelUserTypes = context.UserTypes.ToList();
+                foreach (UserType u in modelUserTypes)
+                {
+                    dtoUserTypes.Add(new DTO.UserTypeDTO(u));
+                }
+                return Ok(dtoUserTypes);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Upload Photo
+
+        [HttpPost("UploadArticleImage")]
+        public async Task<IActionResult> UploadArticleImage(IFormFile file, [FromQuery] int id)
+        {
+            Models.Article? article = context.GetArticle(id);
+            context.ChangeTracker.Clear();
+
+            if (article == null)
+            {
+                return Unauthorized("Article was not found in the database");
+            }
+
+            //Read all files sent
+            long imagesSize = 0;
+
+            if (file.Length > 0)
+            {
+                //Check the file extention!
+                string[] allowedExtentions = { ".png" };
+                string extention = "";
+                if (file.FileName.LastIndexOf(".") > 0)
+                {
+                    extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
+                }
+                if (!allowedExtentions.Where(e => e == extention).Any())
+                {
+                    //Extention is not supported
+                    return BadRequest("Image format has to be .png");
+                }
+
+                //Build path in the web root (better to a specific folder under the web root
+                string filePath = $"{this.webHostEnvironment.WebRootPath}\\articles\\{id}{extention}";
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await file.CopyToAsync(stream);
+
+                    if (IsImage(stream))
+                    {
+                        imagesSize += stream.Length;
+                    }
+                    else
+                    {
+                        //Delete the file if it is not supported!
+                        System.IO.File.Delete(filePath);
+                        return BadRequest("Selected file is not an image");
+                    }
+                }
+            }
+            return Ok();
+        }
+        private static bool IsImage(Stream stream)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+
+            List<string> jpg = new List<string> { "FF", "D8" };
+            List<string> bmp = new List<string> { "42", "4D" };
+            List<string> gif = new List<string> { "47", "49", "46" };
+            List<string> png = new List<string> { "89", "50", "4E", "47", "0D", "0A", "1A", "0A" };
+            List<List<string>> imgTypes = new List<List<string>> { jpg, bmp, gif, png };
+
+            List<string> bytesIterated = new List<string>();
+
+            for (int i = 0; i < 8; i++)
+            {
+                string bit = stream.ReadByte().ToString("X2");
+                bytesIterated.Add(bit);
+
+                bool isImage = imgTypes.Any(img => !img.Except(bytesIterated).Any());
+                if (isImage)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region Upload article
+
+        [HttpPost("UploadArticle")]
+        public async Task<IActionResult> UploadArticle([FromBody] DTO.ArticleDTO articleDto)
+        {
+            try
+            {
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (loggedInUser.UserTypeId != 1)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+
+                //Get model user class from DB with matching email. 
+                Models.Article modelsArticle = new()
+                {
+                    Title = articleDto.Title,
+                    Text = articleDto.Text,
+                    IsBreaking = articleDto.IsBreaking,
+                    WriterId = loggedInUser.UserId
+                };
+                context.Articles.Add(modelsArticle);
+                context.SaveChanges();
+
+                //User was added!
+                DTO.ArticleDTO dtoArticle = new(modelsArticle);
+                return Ok(dtoArticle);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Get Photo Path
+
+        private string GetProfileImageVirtualPath(int userId)
+        {
+            string virtualPath = $"/profileImages/{userId}";
+            string path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.png";
+            if (System.IO.File.Exists(path))
+            {
+                virtualPath += ".png";
+            }
+            else
+            {
+                path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.jpg";
+                if (System.IO.File.Exists(path))
+                {
+                    virtualPath += ".jpg";
+                }
+                else
+                {
+                    virtualPath = $"/profileImages/default.png";
+                }
+            }
+
+            return virtualPath;
+        }
+
         #endregion
     }
 }

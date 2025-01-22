@@ -11,5 +11,11 @@ namespace Formula1Server.Models
                 .Include(u => u.Articles)
                 .FirstOrDefault();
         }
+        public Article GetArticle(int id)
+        {
+            return this.Articles.Where(a => a.ArticleId == id)
+                .Include(a => a.Subjects)
+                .FirstOrDefault();
+        }
     }
 }

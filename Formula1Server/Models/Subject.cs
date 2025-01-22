@@ -12,9 +12,9 @@ public partial class Subject
     public int SubjectId { get; set; }
 
     [StringLength(250)]
-    public string SubjectName { get; set; }
+    public string SubjectName { get; set; } = null!;
 
     [ForeignKey("SubjectId")]
     [InverseProperty("Subjects")]
-    public virtual ICollection<Article> Articles { get; set; } = [];
+    public virtual ICollection<Article> Articles { get; set; } = new List<Article>();
 }

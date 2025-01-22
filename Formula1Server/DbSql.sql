@@ -33,7 +33,7 @@ Go
 CREATE TABLE Users (
 	[UserId] INT IDENTITY(1,1) PRIMARY KEY, -- PK user ID
 	[Email] NVARCHAR(250) NOT NULL, -- user email
-	[Username] NVARCHAR(20) NOT NULL, -- username
+	[Username] NVARCHAR(20) UNIQUE NOT NULL, -- username
 	[Name] NVARCHAR(250) NOT NULL, -- name of the user
 	[Password] NVARCHAR(20) NOT NULL, -- password
 	[IsAdmin] BIT NOT NULL, -- defines whether the user is an admin or not
@@ -52,17 +52,8 @@ CREATE TABLE Articles (
 	[Title] NVARCHAR(250) NOT NULL, -- the title of the article
 	[Text] NVARCHAR(4000) NOT NULL, -- the content of the article
 	[IsBreaking] BIT NOT NULL, -- is the article breaking news
-)
-Go
-
--- creation of the writers-articles table --
-CREATE TABLE WritersArticles (
-	[ArticleId] INT NOT NULL -- the id of the article, FK from articles
-		FOREIGN KEY(ArticleId) REFERENCES Articles(ArticleId),
 	[WriterId] INT NOT NULL -- the id of the writer, FK from writers
-		FOREIGN KEY(WriterId) REFERENCES Users(UserId),
-	--CONSTRAINT PK_WritersArticles
-	PRIMARY KEY(ArticleId,WriterId) -- constraints both the article id and the writer id to the PK
+		FOREIGN KEY(WriterId) REFERENCES Users(UserId)
 )
 Go
 
@@ -97,9 +88,9 @@ Go
 INSERT INTO Users VALUES('admin@gmail.com', 'admin1', 'Ofek Rom', 'writer123', 1, 'Fernando Alonso','Aston Martin','2007/03/12', 0, 2)
 Go
 
-INSERT INTO Articles VALUES('Test', 'This is the test article', 1)
+INSERT INTO Articles VALUES('Test', 'This is the test article', 1, 2)
 Go
-INSERT INTO Articles VALUES('Test', 'This is the second test article', 0)
+INSERT INTO Articles VALUES('Test', 'This is the second test article', 0, 2)
 Go
 
 
@@ -125,11 +116,6 @@ Go
 INSERT INTO ArticlesSubjects VALUES(2, 2)
 Go
 
-INSERT INTO WritersArticles VALUES(1, 2)
-Go
-INSERT INTO WritersArticles VALUES(2, 2)
-Go
-
 SELECT * FROM UserTypes
 Go
 SELECT * FROM Users
@@ -140,7 +126,6 @@ SELECT * FROM Subjects
 Go
 SELECT * FROM ArticlesSubjects
 Go
-SELECT * FROM WritersArticles
-Go
 
---scaffold - DbContext \"Server = (localdb)\MSSQLLocalDB;Initial Catalog=DbSql;User ID=AdminLogin;Password=rokazyo123;\" Microsoft.EntityFrameworkCore.SqlServer - OutPutDir Models - Context F1DBContext - DataAnnotations - force
+--scaffold-DbContext "Server = (localdb)\MSSQLLocalDB;Initial Catalog=DbSql;User ID=AdminLogin;Password=rokazyo123;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models -Context F1DBContext -DataAnnotations -force
+--scaffold-DbContext "Server = (localdb)\MSSQLLocalDB;Initial Catalog=DbSql;User ID=AdminLogin;Password=rokazyo123;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models -Context F1DBContext -DataAnnotations -force
