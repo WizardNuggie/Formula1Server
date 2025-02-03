@@ -85,7 +85,7 @@ INSERT INTO Users VALUES('regular@gmail.com','regular1','Ro','regular123',0,'Fer
 Go
 INSERT INTO Users VALUES('writer@gmail.com', 'writer1', 'Shahar Dabush', 'writer123', 0, 'Fernando Alonso','Aston Martin','2007/09/29', 1, 1)
 Go
-INSERT INTO Users VALUES('admin@gmail.com', 'admin1', 'Ofek Rom', 'writer123', 1, 'Fernando Alonso','Aston Martin','2007/03/12', 0, 2)
+INSERT INTO Users VALUES('admin@gmail.com', 'admin1', 'Ofek Rom', 'admin123', 1, 'Fernando Alonso','Aston Martin','2007/03/12', 0, 2)
 Go
 
 INSERT INTO Articles VALUES('Test', 'This is the test article', 1, 2)
