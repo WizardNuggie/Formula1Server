@@ -184,6 +184,37 @@ namespace Formula1Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("GetUsersByUT")]
+        public IActionResult GetUsersByUT(int userTypeId)
+        {
+            try
+            {
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                List<UserType> uts = context.UserTypes.Include(u => u.Users).ToList();
+                UserType ut = uts.Where(x => x.UserTypeId == userTypeId).FirstOrDefault();
+                List<DTO.UserDTO> dtoUsers = new();
+                List<User> modelUsers = ut.Users.ToList();
+                foreach (User u in modelUsers)
+                {
+                    dtoUsers.Add(new DTO.UserDTO(u));
+                }
+                return Ok(dtoUsers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
         #region GetUserTypes
