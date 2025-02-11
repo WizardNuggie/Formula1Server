@@ -254,52 +254,69 @@ namespace Formula1Server.Controllers
         [HttpPost("UploadArticleImage")]
         public async Task<IActionResult> UploadArticleImage(IFormFile file, [FromQuery] int id)
         {
-            Models.Article? article = context.GetArticle(id);
-            context.ChangeTracker.Clear();
-
-            if (article == null)
+            try
             {
-                return Unauthorized("Article was not found in the database");
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (loggedInUser.UserTypeId != 1 && !loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                Models.Article? article = context.GetArticle(id);
+                context.ChangeTracker.Clear();
+
+                if (article == null)
+                {
+                    return Unauthorized("Article was not found in the database");
+                }
+
+                //Read all files sent
+                long imagesSize = 0;
+
+                if (file.Length > 0)
+                {
+                    //Check the file extention!
+                    string[] allowedExtentions = { ".png" };
+                    string extention = "";
+                    if (file.FileName.LastIndexOf(".") > 0)
+                    {
+                        extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
+                    }
+                    if (!allowedExtentions.Where(e => e == extention).Any())
+                    {
+                        //Extention is not supported
+                        return BadRequest("Image format has to be .png");
+                    }
+
+                    //Build path in the web root (better to a specific folder under the web root
+                    string filePath = $"{this.webHostEnvironment.WebRootPath}\\articles\\{id}{extention}";
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await file.CopyToAsync(stream);
+
+                        if (IsImage(stream))
+                        {
+                            imagesSize += stream.Length;
+                        }
+                        else
+                        {
+                            //Delete the file if it is not supported!
+                            System.IO.File.Delete(filePath);
+                            return BadRequest("Selected file is not an image");
+                        }
+                    }
+                }
+                return Ok();
             }
-
-            //Read all files sent
-            long imagesSize = 0;
-
-            if (file.Length > 0)
+            catch (Exception ex)
             {
-                //Check the file extention!
-                string[] allowedExtentions = { ".png" };
-                string extention = "";
-                if (file.FileName.LastIndexOf(".") > 0)
-                {
-                    extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
-                }
-                if (!allowedExtentions.Where(e => e == extention).Any())
-                {
-                    //Extention is not supported
-                    return BadRequest("Image format has to be .png");
-                }
-
-                //Build path in the web root (better to a specific folder under the web root
-                string filePath = $"{this.webHostEnvironment.WebRootPath}\\articles\\{id}{extention}";
-
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await file.CopyToAsync(stream);
-
-                    if (IsImage(stream))
-                    {
-                        imagesSize += stream.Length;
-                    }
-                    else
-                    {
-                        //Delete the file if it is not supported!
-                        System.IO.File.Delete(filePath);
-                        return BadRequest("Selected file is not an image");
-                    }
-                }
+                return BadRequest(ex.Message);
             }
-            return Ok();
         }
         private static bool IsImage(Stream stream)
         {
