@@ -69,7 +69,7 @@ namespace Formula1Server.Controllers
                     FavDriver = userDto.FavDriver,
                     FavConstructor = userDto.FavConstructor,
                     Birthday = userDto.Birthday,
-                    UserTypeId = 4,
+                    UserTypeId = 2,
                 };
                 modelsUser.UserType = this.context.UserTypes.Where(t => t.UserTypeId == modelsUser.UserTypeId).FirstOrDefault();
                 if (this.context.Users.Where(u => u.Username == modelsUser.Username).Any())
@@ -161,6 +161,7 @@ namespace Formula1Server.Controllers
         {
             try
             {
+                #region security check
                 string? userName = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userName))
                 {
@@ -171,6 +172,7 @@ namespace Formula1Server.Controllers
                 {
                     return Unauthorized("You do not have the required permissions");
                 }
+                #endregion
                 List<DTO.UserDTO> dtoUsers = new();
                 List<User> modelUsers = context.Users.ToList();
                 foreach (User u in modelUsers)
@@ -190,6 +192,7 @@ namespace Formula1Server.Controllers
         {
             try
             {
+                #region security check
                 string? userName = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userName))
                 {
@@ -200,6 +203,7 @@ namespace Formula1Server.Controllers
                 {
                     return Unauthorized("You do not have the required permissions");
                 }
+                #endregion
                 List<UserType> uts = context.UserTypes.Include(u => u.Users).ToList();
                 UserType ut = uts.Where(x => x.UserTypeId == userTypeId).FirstOrDefault();
                 List<DTO.UserDTO> dtoUsers = new();
@@ -224,6 +228,7 @@ namespace Formula1Server.Controllers
         {
             try
             {
+                #region security check
                 string? userName = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userName))
                 {
@@ -234,6 +239,7 @@ namespace Formula1Server.Controllers
                 {
                     return Unauthorized("You do not have the required permissions");
                 }
+                #endregion
                 List<DTO.UserTypeDTO> dtoUserTypes = new();
                 List<UserType> modelUserTypes = context.UserTypes.ToList();
                 foreach (UserType u in modelUserTypes)
@@ -256,6 +262,7 @@ namespace Formula1Server.Controllers
         {
             try
             {
+                #region security check
                 string? userName = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userName))
                 {
@@ -266,6 +273,7 @@ namespace Formula1Server.Controllers
                 {
                     return Unauthorized("You do not have the required permissions");
                 }
+                #endregion
                 Models.Article? article = context.GetArticle(id);
                 context.ChangeTracker.Clear();
 
@@ -353,6 +361,7 @@ namespace Formula1Server.Controllers
         {
             try
             {
+                #region security check
                 string? userName = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userName))
                 {
@@ -363,6 +372,7 @@ namespace Formula1Server.Controllers
                 {
                     return Unauthorized("You do not have the required permissions");
                 }
+                #endregion
 
                 //Get model user class from DB with matching email. 
                 Models.Article modelsArticle = new()
@@ -412,6 +422,43 @@ namespace Formula1Server.Controllers
             return virtualPath;
         }
 
+        #endregion
+
+        #region RemoveUser
+        [HttpGet("RemoveUser")]
+        public async Task<IActionResult> RemoveUser(int userId)
+        {
+            try
+            {
+                #region security check
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                #endregion
+                User u = context.Users.Where(x => x.UserId == userId).FirstOrDefault();
+                if (u != null)
+                {
+                    context.Users.Remove(u);
+                    context.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("User was not found in database");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
     }
 }
