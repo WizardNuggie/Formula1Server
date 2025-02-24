@@ -21,6 +21,12 @@ public partial class Article
 
     public int WriterId { get; set; }
 
+    public int StatusId { get; set; }
+
+    [ForeignKey("StatusId")]
+    [InverseProperty("Articles")]
+    public virtual Status Status { get; set; } = null!;
+
     [ForeignKey("WriterId")]
     [InverseProperty("Articles")]
     public virtual User Writer { get; set; } = null!;

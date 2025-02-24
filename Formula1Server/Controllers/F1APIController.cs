@@ -98,7 +98,7 @@ namespace Formula1Server.Controllers
             try
             {
                 List<DTO.ArticleDTO> dtoNews = new();
-                List<Article> modelNews = context.Articles.Include(a => a.Subjects).ToList();
+                List<Article> modelNews = context.Articles.Where(a => a.StatusId == 1).Include(a => a.Subjects).ToList();
                 foreach (Article a in modelNews)
                 {
                     dtoNews.Add(new DTO.ArticleDTO(a));
@@ -119,7 +119,7 @@ namespace Formula1Server.Controllers
                 List<Subject> subjects = context.Subjects.Include(s => s.Articles).ToList();
                 Subject subject = subjects.Where(x =>  x.SubjectId == subjectId).FirstOrDefault();
                 List<DTO.ArticleDTO> dtoNews = new();
-                List<Article> modelNews = subject.Articles.ToList();
+                List<Article> modelNews = subject.Articles.Where(a => a.StatusId == 1).ToList();
                 foreach (Article a in modelNews)
                 {
                     dtoNews.Add(new DTO.ArticleDTO(a));
@@ -380,8 +380,14 @@ namespace Formula1Server.Controllers
                     Title = articleDto.Title,
                     Text = articleDto.Text,
                     IsBreaking = articleDto.IsBreaking,
-                    WriterId = loggedInUser.UserId
+                    WriterId = loggedInUser.UserId,
+                    StatusId = 2,
+                    Subjects = new List<Subject>()
                 };
+                foreach (SubjectDTO s in articleDto.Subjects)
+                {
+                    modelsArticle.Subjects.Add(context.Subjects.Where(x => x.SubjectId == s.Id).FirstOrDefault());
+                }
                 context.Articles.Add(modelsArticle);
                 context.SaveChanges();
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Formula1Server.Models;
 
-[Index("Username", Name = "UQ__Users__536C85E4C9EDDF44", IsUnique = true)]
+[Index("Username", Name = "UQ__Users__536C85E405E8432D", IsUnique = true)]
 public partial class User
 {
     [Key]

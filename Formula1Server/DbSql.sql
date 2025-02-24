@@ -46,6 +46,13 @@ CREATE TABLE Users (
 )
 Go
 
+-- creation of the statuses table --
+CREATE TABLE Statuses (
+	[Id] INT IDENTITY(1,1) PRIMARY KEY, -- PK
+	[Name] NVARCHAR(250) NOT NULL
+)
+Go
+
 -- creation of the aricles table --
 CREATE TABLE Articles (
 	[ArticleId] INT IDENTITY(1,1) PRIMARY KEY, -- PK
@@ -53,7 +60,9 @@ CREATE TABLE Articles (
 	[Text] NVARCHAR(4000) NOT NULL, -- the content of the article
 	[IsBreaking] BIT NOT NULL, -- is the article breaking news
 	[WriterId] INT NOT NULL -- the id of the writer, FK from writers
-		FOREIGN KEY(WriterId) REFERENCES Users(UserId)
+		FOREIGN KEY(WriterId) REFERENCES Users(UserId),
+	[StatusId] INT NOT NULL -- the id of the status, FK from statuses
+		FOREIGN KEY(StatusId) REFERENCES Statuses(Id)
 )
 Go
 
@@ -88,9 +97,16 @@ Go
 INSERT INTO Users VALUES('admin@gmail.com', 'admin1', 'Ofek Rom', 'admin123', 1, 'Fernando Alonso','Aston Martin','2007/03/12', 0, 2)
 Go
 
-INSERT INTO Articles VALUES('Test', 'This is the test article', 1, 2)
+INSERT INTO Statuses VALUES('Approved')
 Go
-INSERT INTO Articles VALUES('Test', 'This is the second test article', 0, 2)
+INSERT INTO Statuses VALUES('Pending')
+Go
+INSERT INTO Statuses VALUES('Declined')
+Go
+
+INSERT INTO Articles VALUES('Test', 'This is the test article', 1, 2, 1)
+Go
+INSERT INTO Articles VALUES('Test', 'This is the second test article', 0, 2, 1)
 Go
 
 
@@ -119,6 +135,8 @@ Go
 SELECT * FROM UserTypes
 Go
 SELECT * FROM Users
+Go
+SELECT * FROM Statuses
 Go
 SELECT * FROM Articles
 Go

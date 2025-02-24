@@ -17,6 +17,8 @@ public partial class F1DBContext : DbContext
 
     public virtual DbSet<Article> Articles { get; set; }
 
+    public virtual DbSet<Status> Statuses { get; set; }
+
     public virtual DbSet<Subject> Subjects { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -31,11 +33,15 @@ public partial class F1DBContext : DbContext
     {
         modelBuilder.Entity<Article>(entity =>
         {
-            entity.HasKey(e => e.ArticleId).HasName("PK__Articles__9C6270E8F074685C");
+            entity.HasKey(e => e.ArticleId).HasName("PK__Articles__9C6270E82DD563AB");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Articles)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Articles__Status__2D27B809");
 
             entity.HasOne(d => d.Writer).WithMany(p => p.Articles)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Articles__Writer__2A4B4B5E");
+                .HasConstraintName("FK__Articles__Writer__2C3393D0");
 
             entity.HasMany(d => d.Subjects).WithMany(p => p.Articles)
                 .UsingEntity<Dictionary<string, object>>(
@@ -43,26 +49,31 @@ public partial class F1DBContext : DbContext
                     r => r.HasOne<Subject>().WithMany()
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ArticlesS__Subje__300424B4"),
+                        .HasConstraintName("FK__ArticlesS__Subje__32E0915F"),
                     l => l.HasOne<Article>().WithMany()
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ArticlesS__Artic__2F10007B"),
+                        .HasConstraintName("FK__ArticlesS__Artic__31EC6D26"),
                     j =>
                     {
-                        j.HasKey("ArticleId", "SubjectId").HasName("PK__Articles__06A3CAD2AC000778");
+                        j.HasKey("ArticleId", "SubjectId").HasName("PK__Articles__06A3CAD2BA97893B");
                         j.ToTable("ArticlesSubjects");
                     });
         });
 
+        modelBuilder.Entity<Status>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Statuses__3214EC0703A9B5D4");
+        });
+
         modelBuilder.Entity<Subject>(entity =>
         {
-            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA3A8B10F3168");
+            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA3A8E31F721B");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C0DD93952");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CF5E8D54F");
 
             entity.HasOne(d => d.UserType).WithMany(p => p.Users)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -71,7 +82,7 @@ public partial class F1DBContext : DbContext
 
         modelBuilder.Entity<UserType>(entity =>
         {
-            entity.HasKey(e => e.UserTypeId).HasName("PK__UserType__40D2D81698A2F88E");
+            entity.HasKey(e => e.UserTypeId).HasName("PK__UserType__40D2D816B27C6025");
         });
 
         OnModelCreatingPartial(modelBuilder);
