@@ -12,6 +12,7 @@
         public DateOnly Birthday { get; set; }
         public bool IsAdmin { get; set; }
         public int UserTypeId { get; set; }
+        public List<ArticleDTO> Articles { get; set; }
 
         public UserDTO(int id, string email, string username, string name, string password, string driver, string @const, DateOnly bd, int id2, bool isAdmin)
         {
@@ -38,6 +39,11 @@
             this.Birthday = u.Birthday;
             this.UserTypeId = u.UserTypeId;
             this.IsAdmin = u.IsAdmin;
+            this.Articles = new();
+            foreach (Models.Article a in u.Articles)
+            {
+                this.Articles.Add(new ArticleDTO(a));
+            }
         }
         public UserDTO() { }
     }

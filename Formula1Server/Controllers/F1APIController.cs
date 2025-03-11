@@ -131,6 +131,32 @@ namespace Formula1Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("GetNewsByUser")]
+        public IActionResult GetNewsByUser(int userId)
+        {
+            try
+            {
+                #region security check
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                #endregion
+                List<DTO.ArticleDTO> dtoNews = new();
+                List<Article> modelNews = context.Articles.Where(a => a.Writer.UserId == userId).ToList();
+                foreach (Article a in modelNews)
+                {
+                    dtoNews.Add(new DTO.ArticleDTO(a));
+                }
+                return Ok(dtoNews);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
         #region GetSubjects
