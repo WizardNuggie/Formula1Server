@@ -9,6 +9,7 @@ namespace Formula1Server.Models
         {
             return this.Users.Where(u => u.Username == username)
                 .Include(u => u.Articles)
+                .ThenInclude(a => a.Subjects)
                 .FirstOrDefault();
         }
         public Article GetArticle(int id)
