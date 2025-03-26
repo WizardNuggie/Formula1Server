@@ -212,6 +212,28 @@ namespace Formula1Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("GetWriterByArticle")]
+        public IActionResult GetWriterByArticle(int articleId)
+        {
+            try
+            {
+                #region security check
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                #endregion
+                List<Article> articles = context.Articles.Include(a => a.Writer).ToList();
+                User u = articles.Where(a => a.ArticleId == articleId).FirstOrDefault().Writer;
+                UserDTO dtoU = new UserDTO(u);
+                return Ok(dtoU);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("GetUsersByUT")]
         public IActionResult GetUsersByUT(int userTypeId)
