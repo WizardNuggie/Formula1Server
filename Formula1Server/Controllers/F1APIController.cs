@@ -92,6 +92,36 @@ namespace Formula1Server.Controllers
         #endregion
 
         #region GetNews
+        [HttpGet("GetAllNews")]
+        public IActionResult GetAllNews()
+        {
+            try
+            {
+                #region security check
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                #endregion
+                List<DTO.ArticleDTO> dtoNews = new();
+                List<Article> modelNews = context.Articles.Include(a => a.Subjects).ToList();
+                foreach (Article a in modelNews)
+                {
+                    dtoNews.Add(new DTO.ArticleDTO(a));
+                }
+                return Ok(dtoNews);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet("GetNews")]
         public IActionResult GetNews()
         {
@@ -422,7 +452,6 @@ namespace Formula1Server.Controllers
                 }
                 #endregion
 
-                //Get model user class from DB with matching email. 
                 Models.Article modelsArticle = new()
                 {
                     Title = articleDto.Title,
@@ -478,7 +507,7 @@ namespace Formula1Server.Controllers
 
         #endregion
 
-        #region RemoveUser
+        #region Remove User
         [HttpGet("RemoveUser")]
         public async Task<IActionResult> RemoveUser(int userId)
         {
@@ -506,6 +535,77 @@ namespace Formula1Server.Controllers
                 else
                 {
                     return BadRequest("User was not found in database");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Manage Articles
+        [HttpGet("ApproveArticle")]
+        public async Task<IActionResult> ApproveArticle(int articleId)
+        {
+            try
+            {
+                #region security check
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                #endregion
+                Article a = context.Articles.Where(x => x.ArticleId == articleId).FirstOrDefault();
+                if (a != null)
+                {
+                    a.StatusId = 1;
+                    context.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Article was not found in database");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("DeclineArticle")]
+        public async Task<IActionResult> DeclineArticle(int articleId)
+        {
+            try
+            {
+                #region security check
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                #endregion
+                Article a = context.Articles.Where(x => x.ArticleId == articleId).FirstOrDefault();
+                if (a != null)
+                {
+                    a.StatusId = 3;
+                    context.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Article was not found in database");
                 }
             }
             catch (Exception ex)

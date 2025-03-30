@@ -9,7 +9,6 @@ namespace Formula1Server.DTO
         public string Text { get; set; }
         public bool IsBreaking { get; set; }
         public int WriterId { get; set; }
-        public UserDTO User { get; set; }
         public int StatusId { get; set; }
         public List<SubjectDTO> Subjects { get; set; }
 
