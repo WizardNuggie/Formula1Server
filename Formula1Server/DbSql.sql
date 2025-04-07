@@ -4,7 +4,7 @@ IF EXISTS (SELECT * FROM sys.databases WHERE name = N'Dbsql')
 BEGIN
     DROP DATABASE Dbsql;
 END
-GO
+Go
 Create Database Dbsql
 Go
 Use Dbsql
