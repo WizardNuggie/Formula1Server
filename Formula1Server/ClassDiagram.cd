@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Formula1Server.Models.Article" Collapsed="true">
+    <Position X="57.25" Y="24" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEgMAAAAAEAAAAAAAAAAAAAAAAAAgAAACAEQAAA=</HashCode>
+      <FileName>Models\Article.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Writer" />
+      <Property Name="Status" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Subjects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Formula1Server.Models.F1DBContext" Collapsed="true">
+    <Position X="54.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAGAIAQAQAAAEAAAAAAAAEAAACAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Models\F1DBContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Formula1Server.Models.Status" Collapsed="true">
+    <Position X="60" Y="24" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Status.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Articles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Formula1Server.Models.Subject" Collapsed="true">
+    <Position X="57.25" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Models\Subject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Articles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Formula1Server.Models.User" Collapsed="true">
+    <Position X="57.25" Y="25.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAiIAAAAACQAAAAwACQAICAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserType" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Articles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Formula1Server.Models.UserType" Collapsed="true">
+    <Position X="57.25" Y="26.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\UserType.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Users" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
