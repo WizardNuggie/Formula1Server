@@ -242,6 +242,7 @@ namespace Formula1Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        //comment
         [HttpGet("GetWriterByArticle")]
         public IActionResult GetWriterByArticle(int articleId)
         {
