@@ -614,5 +614,50 @@ namespace Formula1Server.Controllers
             }
         }
         #endregion
+
+        #region Edit User
+        [HttpPost("EditUserDetails")]
+        public async Task<IActionResult> EditUserDetails([FromBody]UserDTO user)
+        {
+            try
+            {
+                #region security check
+                string? userName = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userName))
+                {
+                    return Unauthorized("User is not logged in!");
+                }
+                User? loggedInUser = context.GetUser(userName);
+                if (!loggedInUser.IsAdmin)
+                {
+                    return Unauthorized("You do not have the required permissions");
+                }
+                #endregion
+                User u = context.Users.Where(x => x.UserId == user.Id).FirstOrDefault();
+                if (u != null)
+                {
+                    u.Username = user.Username;
+                    u.Email = user.Email;
+                    u.Name = user.Name;
+                    u.Password = user.Password;
+                    u.FavDriver = user.FavDriver;
+                    u.FavConstructor = user.FavConstructor;
+                    u.Birthday = user.Birthday;
+                    u.UserTypeId = user.UserTypeId;
+                    u.IsAdmin = user.IsAdmin;
+                    context.SaveChanges();
+                    return Ok(user);
+                }
+                else
+                {
+                    return BadRequest("User was not found in database");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
     }
 }

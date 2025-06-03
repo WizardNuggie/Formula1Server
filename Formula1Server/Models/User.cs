@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Formula1Server.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Formula1Server.Models;
@@ -44,4 +45,20 @@ public partial class User
     [ForeignKey("UserTypeId")]
     [InverseProperty("Users")]
     public virtual UserType UserType { get; set; } = null!;
+
+    public User() { }
+    public User(UserDTO u)
+    {
+        this.UserId = u.Id;
+        this.Email = u.Email;
+        this.Username = u.Username;
+        this.Name = u.Name;
+        this.Password = u.Password;
+        this.IsAdmin = u.IsAdmin;
+        this.FavDriver = u.FavDriver;
+        this.FavConstructor = u.FavConstructor;
+        this.Birthday = u.Birthday;
+        this.UserTypeId = u.UserTypeId;
+    }
+
 }
