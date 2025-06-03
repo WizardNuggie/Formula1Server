@@ -230,7 +230,7 @@ namespace Formula1Server.Controllers
                 }
                 #endregion
                 List<DTO.UserDTO> dtoUsers = new();
-                List<User> modelUsers = context.Users.ToList();
+                List<User> modelUsers = context.Users.Include(u => u.Articles).ToList();
                 foreach (User u in modelUsers)
                 {
                     dtoUsers.Add(new DTO.UserDTO(u));
@@ -282,7 +282,7 @@ namespace Formula1Server.Controllers
                     return Unauthorized("You do not have the required permissions");
                 }
                 #endregion
-                List<UserType> uts = context.UserTypes.Include(u => u.Users).ToList();
+                List<UserType> uts = context.UserTypes.Include(u => u.Users).ThenInclude(us => us.Articles).ToList();
                 UserType ut = uts.Where(x => x.UserTypeId == userTypeId).FirstOrDefault();
                 List<DTO.UserDTO> dtoUsers = new();
                 List<User> modelUsers = ut.Users.ToList();
