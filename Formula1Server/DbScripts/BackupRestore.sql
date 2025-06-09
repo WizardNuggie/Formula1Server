@@ -13,7 +13,7 @@ Go
 ALTER SERVER ROLE sysadmin ADD MEMBER [AdminLogin];
 Go
 
-Create Database AppServer_DB
+Create Database Dbsql
 go
 
 
@@ -23,8 +23,8 @@ Go
 
 
 USE master;
-ALTER DATABASE AppServer_DB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-RESTORE DATABASE AppServer_DB FROM DISK = 'C:\Users\user\source\repos\WizardNuggie\Formula1Server\Formula1Server\wwwroot\..\DbScripts\backup.bak' WITH REPLACE, --להחליף את זה לנתיב של קובץ הגיבוי
-    MOVE 'AppServer_DB' TO 'C:\Users\user\AppServer_DB.mdf',   --להחליף לנתיב שנמצא על המחשב שלך
-    MOVE 'AppServer_DB_log' TO 'C:\Users\user\AppServer_DB_log.ldf';  
-ALTER DATABASE AppServer_DB SET MULTI_USER;
+ALTER DATABASE Dbsql SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+RESTORE DATABASE Dbsql FROM DISK = 'C:\Users\user\source\repos\WizardNuggie\Formula1Server\Formula1Server\wwwroot\..\DbScripts\backup.bak' WITH REPLACE, --להחליף את זה לנתיב של קובץ הגיבוי
+    MOVE 'Dbsql' TO 'C:\Users\user\Dbsql.mdf',   --להחליף לנתיב שנמצא על המחשב שלך
+    MOVE 'Dbsql_log' TO 'C:\Users\user\Dbsql.ldf';  
+ALTER DATABASE Dbsql SET MULTI_USER;
