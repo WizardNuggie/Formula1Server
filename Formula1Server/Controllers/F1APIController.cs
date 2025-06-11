@@ -630,10 +630,6 @@ namespace Formula1Server.Controllers
                     return Unauthorized("User is not logged in!");
                 }
                 User? loggedInUser = context.GetUser(userName);
-                if (!loggedInUser.IsAdmin)
-                {
-                    return Unauthorized("You do not have the required permissions");
-                }
                 #endregion
                 User u = context.Users.Where(x => x.UserId == user.Id).FirstOrDefault();
                 if (u != null)
