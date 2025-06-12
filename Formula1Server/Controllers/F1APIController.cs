@@ -631,6 +631,10 @@ namespace Formula1Server.Controllers
                 }
                 User? loggedInUser = context.GetUser(userName);
                 #endregion
+                if (this.context.Users.Where(u => u.Username == user.Username).Any())
+                {
+                    return Conflict("Username already exists");
+                }
                 User u = context.Users.Where(x => x.UserId == user.Id).FirstOrDefault();
                 if (u != null)
                 {

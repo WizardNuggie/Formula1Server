@@ -116,7 +116,7 @@ INSERT INTO Subjects VALUES('Constructors')
 Go
 INSERT INTO Subjects VALUES('Races')
 Go
-INSERT INTO Subjects VALUES('F2')
+INSERT INTO Subjects VALUES('Junior Categories')
 Go
 INSERT INTO Subjects VALUES('Technical')
 Go
